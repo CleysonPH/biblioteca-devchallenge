@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -56,6 +57,23 @@ public class BookController {
 
         book.setId(id);
         return bookRepository.save(book);
+    }
+
+    @PatchMapping("/{id}")
+    public Book update(@RequestBody Book book, @PathVariable Long id) {
+        Book bookToUpdate = getById(id);
+
+        if (book.getTitle() != null) {
+            bookToUpdate.setTitle(book.getTitle());
+        }
+        if (book.getPublisher() != null) {
+            bookToUpdate.setPublisher(book.getPublisher());
+        }
+        if (book.getPhoto() != null) {
+            bookToUpdate.setPhoto(book.getPhoto());
+        }
+
+        return bookRepository.save(bookToUpdate);
     }
 
 }
