@@ -2,9 +2,12 @@ package com.cleysonph.booksapi.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.cleysonph.booksapi.exception.BookNotFoundException;
 import com.cleysonph.booksapi.model.Book;
 import com.cleysonph.booksapi.service.BookService;
+import com.cleysonph.booksapi.dto.BookDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +36,8 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Book create(@RequestBody Book book) {
-        return bookService.create(book);
+    public Book create(@RequestBody @Valid BookDTO bookDTO) {
+        return bookService.create(bookDTO);
     }
 
     @GetMapping("/{id}")
@@ -49,8 +52,8 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public Book replace(@RequestBody Book book, @PathVariable Long id) throws BookNotFoundException {
-        return bookService.replace(id, book);
+    public Book replace(@RequestBody @Valid BookDTO bookDTO, @PathVariable Long id) throws BookNotFoundException {
+        return bookService.replace(id, bookDTO);
     }
 
     @PatchMapping("/{id}")

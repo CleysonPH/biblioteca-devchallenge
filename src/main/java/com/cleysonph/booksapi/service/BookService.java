@@ -2,7 +2,9 @@ package com.cleysonph.booksapi.service;
 
 import java.util.List;
 
+import com.cleysonph.booksapi.dto.BookDTO;
 import com.cleysonph.booksapi.exception.BookNotFoundException;
+import com.cleysonph.booksapi.mapper.BookMapper;
 import com.cleysonph.booksapi.model.Book;
 import com.cleysonph.booksapi.repository.BookRepository;
 
@@ -19,7 +21,8 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Book create(Book book) {
+    public Book create(BookDTO bookDTO) {
+        Book book = BookMapper.INSTANCE.toBook(bookDTO);
         return bookRepository.save(book);
     }
 
@@ -32,9 +35,12 @@ public class BookService {
         bookRepository.delete(getById(id));
     }
 
-    public Book replace(Long id, Book book) throws BookNotFoundException {
+    public Book replace(Long id, BookDTO bookDTO) throws BookNotFoundException {
         getById(id);
+
+        Book book = BookMapper.INSTANCE.toBook(bookDTO);
         book.setId(id);
+
         return bookRepository.save(book);
     }
 
