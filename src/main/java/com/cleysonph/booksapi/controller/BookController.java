@@ -2,7 +2,7 @@ package com.cleysonph.booksapi.controller;
 
 import java.util.List;
 
-import com.cleysonph.booksapi.exceptions.BookNotFoundException;
+import com.cleysonph.booksapi.exception.BookNotFoundException;
 import com.cleysonph.booksapi.model.Book;
 import com.cleysonph.booksapi.service.BookService;
 
