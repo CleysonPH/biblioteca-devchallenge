@@ -24,4 +24,9 @@ public class BookController {
         return bookRepository.findAll();
     }
 
+    @PostMapping
+    public Book create(@RequestBody Book book) {
+        return bookRepository.save(book);
+    }
+
 }
