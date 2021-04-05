@@ -2,8 +2,9 @@ package com.cleysonph.booksapi.controller;
 
 import java.util.List;
 
+import com.cleysonph.booksapi.exceptions.BookNotFoundException;
 import com.cleysonph.booksapi.model.Book;
-import com.cleysonph.booksapi.repository.BookRepository;
+import com.cleysonph.booksapi.service.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,63 +18,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/v1/books")
 public class BookController {
 
     @Autowired
-    private BookRepository bookRepository;
+    private BookService bookService;
 
     @GetMapping
     public List<Book> index() {
-        return bookRepository.findAll();
+        return bookService.findAll();
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public Book create(@RequestBody Book book) {
-        return bookRepository.save(book);
+        return bookService.create(book);
     }
 
     @GetMapping("/{id}")
-    public Book getById(@PathVariable Long id) {
-        return bookRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public Book getById(@PathVariable Long id) throws BookNotFoundException {
+        return bookService.getById(id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
-        Book book = getById(id);
-
-        bookRepository.delete(book);
+    public void deleteById(@PathVariable Long id) throws BookNotFoundException {
+        bookService.deleteById(id);
     }
 
     @PutMapping("/{id}")
-    public Book replace(@RequestBody Book book, @PathVariable Long id) {
-        getById(id);
-
-        book.setId(id);
-        return bookRepository.save(book);
+    public Book replace(@RequestBody Book book, @PathVariable Long id) throws BookNotFoundException {
+        return bookService.replace(id, book);
     }
 
     @PatchMapping("/{id}")
-    public Book update(@RequestBody Book book, @PathVariable Long id) {
-        Book bookToUpdate = getById(id);
-
-        if (book.getTitle() != null) {
-            bookToUpdate.setTitle(book.getTitle());
-        }
-        if (book.getPublisher() != null) {
-            bookToUpdate.setPublisher(book.getPublisher());
-        }
-        if (book.getPhoto() != null) {
-            bookToUpdate.setPhoto(book.getPhoto());
-        }
-
-        return bookRepository.save(bookToUpdate);
+    public Book update(@RequestBody Book book, @PathVariable Long id) throws BookNotFoundException {
+        return bookService.update(id, book);
     }
 
 }
